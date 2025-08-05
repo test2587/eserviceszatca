@@ -1,0 +1,768 @@
+(function ($) {
+	"use strict"; // Start of use strict
+
+
+	//Back To Top
+	$('.back-to-top').on('click', function (event) {
+		event.preventDefault();
+		$('html, body').animate({ scrollTop: 0 }, 'slow');
+	});
+
+	//invert-body
+	$('.invert-body').on('click', function (event) {
+		$('body').toggleClass("invert-body-active");
+	});
+
+
+
+
+	/* ===== loading ====*/
+	$(window).on('load', function () { // makes sure the whole site is loaded 
+		$('#loader').fadeOut(100); // will first fade out the loading animation 
+		$('body').delay(100).removeClass('load-bg');
+		$('body').delay(100).addClass('loaded');
+		var minHeight = $(window).height() + 60 - ($('.cover-sec-bg').height() + $('#footer').height());
+		$('.inner-page').css('min-height', minHeight + "px");
+	})
+
+
+	//fixed header
+	function fixed_header() {
+		var ht = $('#header').height();
+		var st = $(window).scrollTop();
+		var sf = ht + 100;
+		if (st > ht) {
+			$('.scroll-fixed').addClass('nav-fixed');
+		} else {
+			$('.scroll-fixed').removeClass('nav-fixed');
+		}
+		if (st > sf) {
+			$('.scroll-fixed').addClass('nav-show');
+		} else {
+			$('.scroll-fixed').removeClass('nav-show');
+		}
+	}
+
+	$('.portsSelect2').select2();
+	$('.select2').select2({
+		language: { noResults: () => "لاتوجد نتائج", },
+		placeholder: "اختر"
+	});
+
+	$('.search-opt').on('click', function () {
+		$('#collapse-settings').collapse('hide');
+
+	})
+
+
+
+
+	$('a.setting-opt.setting-collapse').on('click', function () {
+		$('#collapse-search').collapse('hide');
+
+	})
+
+
+
+	//home quick links		
+	$(".main-area-cont-2 .quick-links-cont > ul > li").hover(
+		function () {
+
+			$(this).addClass('active');
+		}, function () {
+			$(this).removeClass('active');
+		}
+	);
+
+
+
+	//Document Ready
+	jQuery(document).ready(function () {
+
+
+		$(".onlyArabicInput").on("keypress", function (event) {
+
+			var arabicAlphabet = /[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]/g;
+			var key = String.fromCharCode(event.which);
+			if (event.keyCode == 8 || event.keyCode == 32 ||   arabicAlphabet.test(key) && event.keyCode != 1548 && event.keyCode != 1563 && event.keyCode != 1600) {
+				return true;
+			}
+			$('#onlyArabicMsg').html("حروف عربية فقط").show().fadeOut('slow');
+			//alert("non arabic text detected - Please enter your details in Arabic")
+			return false;
+		});
+
+		$('.onlyArabicInput').on("paste", function (e) {
+			e.preventDefault();
+		});
+		$(".onlyTextInput").on("keypress", function (event) {
+
+			var arabicAlphabet = /[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]/g;
+			var englishAlphabet = /[a-zA-Z]/g;
+			var key = String.fromCharCode(event.which);
+			if (event.keyCode == 8 || event.keyCode == 32 || englishAlphabet.test(key) || arabicAlphabet.test(key) && event.keyCode != 1548 && event.keyCode != 1563 && event.keyCode != 1600) {
+				return true;
+			}
+			$('#onlyTextMsg').html("نص فقط").show().fadeOut('slow');
+			//alert("non arabic text detected - Please enter your details in Arabic")
+			return false;
+		});
+
+		$('.onlyTextInput').on("paste", function (e) {
+			e.preventDefault();
+		});
+		$(".onlyTextWithNumbersInput").on("keypress", function (event) {
+
+			var arabicAlphabet = /[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]/g;
+			var englishAlphabet = /[a-zA-Z]/g;
+			var key = String.fromCharCode(event.which);
+			if (event.keyCode == 8 || event.keyCode == 32 || englishAlphabet.test(key) || arabicAlphabet.test(key) || (event.keyCode >= 48 && event.keyCode <= 57) && event.keyCode != 1548 && event.keyCode != 1563 && event.keyCode != 1600) {
+				return true;
+			}
+			$(this).next().html("نصوص فقط").show().fadeOut('slow');
+			//alert("non arabic text detected - Please enter your details in Arabic")
+			return false;
+		});
+
+		$('.onlyTextWithNumbersInput').on("paste", function (e) {
+			e.preventDefault();
+		});
+		
+		$(".onlyNumberInput").on("keypress", function (event) {
+ 
+			var key = String.fromCharCode(event.which);
+			if (!isNaN(key) && key != ' ') {
+				return true;
+			}
+			$(this).next().html(" هذا الحقل يقبل الأرقام فقط").show().fadeOut(3000);
+			//alert("non arabic text detected - Please enter your details in Arabic")
+			return false;
+		});
+
+
+
+		$(document).on('click', '.mob-menu-cont .utilities-list .dropdown-menu , .header-main .dropdown', function (e) {
+			e.stopPropagation();
+		});
+
+
+		/**********/
+
+
+		$(function (e) {
+			$(".main-nav-list-normal li.dropdown").hover(
+				function () {
+					if ($(window).width() > 990)
+						$(this).addClass('open')
+				},
+				function () {
+					if ($(window).width() > 990)
+						$(this).removeClass('open')
+				}
+			);
+		});
+
+		$(window).on('resize', function () {
+			if ($(window).width() > 990) {
+				$(function (e) {
+					$(".main-nav-list-normal li.dropdown").hover(
+						function () { $(this).addClass('open') },
+						function () { $(this).removeClass('open') }
+					);
+				});
+			}
+		});
+
+
+
+		// check IE ver
+		function GetIEVersion() {
+			var sAgent = window.navigator.userAgent;
+			var Idx = sAgent.indexOf("MSIE");
+
+			// If IE, return version number.
+			if (Idx > 0)
+				return parseInt(sAgent.substring(Idx + 5, sAgent.indexOf(".", Idx)));
+
+			// If IE 11 then look for Updated user agent string.
+			else if (!!navigator.userAgent.match(/Trident\/7\./))
+				return 11;
+
+			else
+				return 0; //It is not IE
+		}
+
+		if (GetIEVersion() > 0) {
+			$('body').addClass('ie11');
+		}
+		else {
+			$('body').removeClass('ie11');
+		}
+		//end check IE ver	
+
+
+
+
+
+		//	search collapse
+		$('.complete-table-sub-cont .complete-row-details').on('show.bs.collapse', function () {
+
+			$(this).parent().find('.tooltip-cont').text("Ø¥ØºÙ„Ø§Ù‚")
+		})
+
+		$('.complete-table-sub-cont .complete-row-details').on('hidden.bs.collapse', function () {
+
+			$(this).parent().find('.tooltip-cont').text("ØªÙØ§ØµÙŠÙ„")
+		})
+
+
+
+		//	collapse-fixed-full
+		$('.collapse-fixed-full').on('show.bs.collapse', function () {
+
+			$('.collapse-fixed-full').removeClass('fadeOutUp ');
+			$('body').addClass('collapse-fixed-full-show');
+			$('html').addClass('collapse-fixed-full-show');
+
+		})
+
+
+		$('.collapse-fixed-full [data-target]').on('click', function () {
+			$('body').removeClass('collapse-fixed-full-show');
+			$('html').removeClass('collapse-fixed-full-show');
+			$('.collapse-fixed-full').addClass('fadeOutUp');
+
+		})
+
+
+
+
+
+		/* ===== search input active/not event ====*/
+		$('.quick-links-search-cont input').each(function () {
+			$(this).on("change paste keyup", function () {
+				if ($(this).val()) {
+					$(this).parent().addClass('active');
+				}
+
+				if ($(this).val() === "") {
+					$(this).parent().removeClass('active');
+				}
+			});
+			if ($(this).val()) {
+				$(this).parent().addClass('active');
+			}
+
+		})
+
+
+		//	home typed slider			
+		$(function () {
+
+			var x = 0;
+			var typedLink = ["/Travel", "", "Export", "/Clearance", ""]
+
+			$("#typed").typed({
+				strings: ["Ù…Ø³Ø§ÙØ±", "Ù…Ø³ØªÙˆØ±Ø¯", "Ù…ØµØ¯Ø±", "Ù…Ø®Ù„Øµ Ø¬Ù…Ø±ÙƒÙŠ", "Ø¬Ù‡Ø© Ø­ÙƒÙˆÙ…ÙŠØ©"],
+				typeSpeed: 100,
+				backDelay: 1000,
+				loop: true,
+				contentType: 'html', // or text
+				loopCount: false,
+				preStringTyped: function () {
+
+
+					if (x == 5) {
+						x = 0;
+					}
+
+					$(".banner-slider-imgs-cont .banner-slider-imgs").removeClass('active').addClass('hide-active').animate({ opacity: 0 }, "fast");
+					$(".banner-slider-imgs-cont .banner-slider-imgs:eq(" + x + ")").removeClass('hide-active').addClass('active').animate({ opacity: 1, easing: 'easeOutCirc' }, "slow");
+
+					$("#typed").attr("href", typedLink[x])
+
+					x++;
+				},
+
+
+				resetCallback: function () { newTyped(); }
+			});
+
+
+
+			$(".reset").click(function () {
+				$("#typed").typed('reset');
+			});
+
+
+
+		});
+
+
+
+		// 	file input js
+		$(function () {
+
+			// We can attach the `fileselect` event to all file inputs on the page
+			$(document).on('change', ':file', function () {
+				var input = $(this),
+					numFiles = input.get(0).files ? input.get(0).files.length : 1,
+					label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+				input.trigger('fileselect', [numFiles, label]);
+			});
+
+			// We can watch for our custom `fileselect` event like this
+			/* $(document).ready( function() {
+				$(':file').on('fileselect', function(event, numFiles, label) {
+		  
+					var input = $(this).parents('.input-group').find(':text'),
+						log = numFiles > 1 ? numFiles + ' files selected' : label;
+		  
+					if( input.length ) {
+						input.val(log);
+					} else {
+						if( log ) alert(log);
+					}
+		  
+				});
+			}); */
+
+			$(".custom-file-input").on("change", function () {
+				var fileName = $(this).val().split("\\").pop();
+				$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+			});
+
+		});
+
+
+		//Fixed Header
+		if ($(window).width() > 1024) {
+			fixed_header();
+			$(window).scroll(function () {
+				fixed_header();
+			});
+		}
+
+		//	owl slider most-links
+		//most-links
+		if ($('.most-links-slider').length > 0) {
+
+			$(".owl-carousel").owlCarousel({
+				rtl: true,
+				nav: true,
+				dots: false,
+				margin: 15,
+				navRewind: false,
+				navText: ['<span class="icon_v1 icon-Right-2" > </span>', '<span class="icon_v1 icon-Left-2" > </span>'],
+				responsive: {
+					0: {
+						items: 1
+					},
+					600: {
+						items: 2
+					},
+					960: {
+						items: 3
+					},
+					1200: {
+						items: 3
+					}
+				}
+			});
+
+			$('.most-links-slider').each(function () {
+				$(this).find('.wrap-item').owlCarousel({
+					nav: true,
+					dots: false,
+					rtl: true,
+					margin: 0,
+					autoplay: true,
+					autoplayTimeout: 2500,
+					autoplaySpeed: 1500,
+					autoplayHoverPause: true,
+					navText: [" ", " "],
+					navRewind: false,
+					responsive: {
+						0: {
+							items: 1
+						},
+						600: {
+							items: 2
+						},
+						960: {
+							items: 3
+						},
+						1200: {
+							items: 3
+						}
+					}
+				});
+			});
+		}
+
+
+
+
+
+		/* ============ filers in page Ports ============ */
+		//filer ports by data content text	
+		var ports_list_options = {
+			valueNames: ['title', { data: ['cat'] }, { data: ['sec'] }]
+		};
+
+		var featureList = new List('ports-list', ports_list_options);
+
+		//	filter   
+		$('#ports-list div[data-fi-sec]').click(function () {
+
+			if (!$(this).hasClass('filter-a-z')) {
+				$('#ports-list ul.sort-by li > div[data-fi-cat]').removeClass('active');
+				$(this).addClass('active');
+			}
+
+
+
+
+			if ($('#ports-list  ul.filters-list li a.active').attr('data-active-all') == 'all') {
+				featureList.filter(function (item) {
+					return item.values().sec == $('#ports-list  div[data-fi-sec].active').attr('data-fi-sec');
+				});
+
+			}
+
+			else {
+
+				featureList.filter(function (item) {
+
+					return item.values().sec == $('#ports-list  div[data-fi-sec].active').attr('data-fi-sec') && (item.values().cat == $('#ports-list ul.filters-list li a.active').attr('data-active-cl'));
+
+				});
+			}
+
+		});
+
+		$('#ports-list  ul.filters-list li a[data-active-all="all"]').click(function () {
+
+
+			$('#ports-list ul.filters-list li a').removeClass('active');
+			$(this).addClass('active');
+
+
+
+			if ($('#ports-list div[data-fi-sec].active').hasClass('active')) {
+				featureList.filter(function (item) {
+					return item.values().sec == $('#ports-list  div[data-fi-sec].active').attr('data-fi-sec');
+				});
+
+			}
+
+			else {
+				featureList.filter();
+			}
+
+		});
+
+		$('#ports-list ul.filters-list li a[data-active-cl]').click(function () {
+
+			$('#ports-list  ul.filters-list li a').removeClass('active');
+			$(this).addClass('active');
+
+			if ($('#ports-list  .filter-a-z').hasClass('active')) {
+				featureList.filter(function (item) {
+					return item.values().cat.trim() == $('#ports-list  a[data-active-cl].active').attr('data-active-cl');
+				});
+
+
+			}
+
+
+			else {
+
+				featureList.filter(function (item) {
+					return item.values().cat.trim() == $('#ports-list  a[data-active-cl].active').attr('data-active-cl') && item.values().sec == $('#ports-list   div[data-fi-sec].active').attr('data-fi-sec');
+				});
+
+
+			}
+		});
+
+		$('#ports-list  .filter-none').click(function () {
+			featureList.filter();
+
+			$('#ports-list ul.sort-by li > div').removeClass('active');
+			$(this).addClass('active');
+			return false;
+		});
+
+		/* ============ date picker ============ */
+
+
+		if (($("#startDate").length) || $("#endDate").length) {
+
+			$(function () {
+				var sd = new Date(), ed = new Date();
+
+				$('#startDate').datetimepicker({
+					pickTime: false,
+					format: "YYYY/MM/DD",
+					defaultDate: sd,
+					isRTL: false,
+					language: 'ar',
+					maxDate: ed,
+					orientation: "bottom"
+				});
+
+				$('#endDate').datetimepicker({
+					pickTime: false,
+					format: "YYYY/MM/DD",
+					defaultDate: ed,
+					isRTL: false,
+					language: 'ar',
+					minDate: sd,
+					orientation: "bottom"
+
+				});
+
+			});
+		}
+
+		//	/*********************/
+		// lightgallery
+		if ($("#lightgallery").length) {
+			$("#lightgallery").lightGallery({
+				selector: '.item',
+				zoom: false,
+				exThumbImage: 'data-thumbimage',
+				share: false
+			});
+		}
+
+
+		//	footable
+		if ($(".showcase-footable").length) {
+			jQuery(function ($) {
+				$('.showcase-footable').footable();
+			});
+		}
+
+
+		//	active first FAQ
+		$('.content-section.collapse-section.faq-section').find('#accordion .panel:first-child').find('.panel-collapse').addClass('in');
+
+
+	});
+
+
+	if (_spPageContextInfo.userId == 0) { $('.isLoggedIn').hide() }
+
+
+
+
+
+})(jQuery); // End of use strict
+
+
+//reg new user
+
+if ($('#smartwizard').length && $('#datepicker').length) {
+
+
+	$(document).ready(function () {
+
+
+		//	hijri calender
+		$(function () {
+			var calendar = $.calendars.instance('islamic', 'ar');
+			$('#datepicker').calendarsPicker({ calendar: calendar });
+		});
+
+
+		// Smart Wizard
+		$('#smartwizard').smartWizard({
+			selected: 0,
+			theme: 'dots',
+			transitionEffect: 'none',
+			useURLhash: false, // Enable selection of the step based on url hash
+			lang: {  // Language variables
+				next: 'Ø§Ù„ØªØ§Ù„ÙŠ',
+				previous: 'Ø§Ù„Ø³Ø§Ø¨Ù‚'
+			},
+			toolbarSettings: {
+				toolbarPosition: 'bottom'
+			},
+			anchorSettings: {
+				markDoneStep: true, // add done css
+				markAllPreviousStepsAsDone: true, // When a step selected by url hash, all previous steps are marked done
+				removeDoneStepOnNavigateBack: true, // While navigate back done step after active step will be cleared
+				enableAnchorOnDoneStep: true // Enable/Disable the done steps navigation
+			}
+		});
+
+		$("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
+
+
+
+			var elmForm = $("#form-step-" + stepNumber);
+
+			// stepDirection === 'forward' :- this condition allows to do the form validation
+			// only on forward navigation, that makes easy navigation on backwards still do the validation when going next
+			//                if(stepDirection === 'forward' && elmForm){
+			elmForm.validator('validate');
+			var elmErr = elmForm.find('.has-error');
+			if (elmErr && elmErr.length > 0) {
+				// Form validation failed
+				return false;
+			}
+			//                }
+			return true;
+		});
+
+		$("#smartwizard").on("showStep", function (e, anchorObject, stepNumber, stepDirection) {
+			// Enable finish button only on last step
+			if (stepNumber == 3) {
+				$('.sw-btn-next').addClass('hide');
+				$('.sw-main .sw-toolbar .btn-group.sw-btn-group').addClass('last');
+			} else {
+				$('.sw-btn-next').removeClass('hide');
+				$('.sw-main .sw-toolbar .btn-group.sw-btn-group').removeClass('last');
+			}
+		});
+
+	});
+
+}
+
+
+
+//e-services
+
+if ($('.filter-sort-cont.filter-sort-srv-cont').length) {
+
+
+	$(document).ready(function () {
+
+
+
+		$('.filter-list-view-type div').click(function () {
+			$('.filter-list-view-type div').removeClass('active');
+			$('#filter-list-cont').removeClass('gallery');
+
+			$(this).addClass('active');
+
+			if ($(this).attr('data-filter-view') === 'gallery') {
+
+				$("#filter-list-cont").addClass($(this).attr('data-filter-view'));
+
+			}
+		});
+
+
+		$('.e-services-section .services-box ul li a h3').each(function () {
+
+			var str = $(this).text().trim();
+			$(this).parent().parent().attr('data-letter', str[0].charCodeAt(0));
+
+		});
+
+		var list_letters = [];
+
+		$('.e-services-section .services-box ul li a h3').each(function () {
+
+			var str = $(this).text().trim();
+			$(this).attr('data-letter', str[0].charCodeAt(0));
+			list_letters.push(str[0]);
+
+
+
+
+		});
+
+
+
+		var unique = list_letters.filter(function (itm, i, list_letters) {
+			return i == list_letters.indexOf(itm);
+		});
+
+
+
+		for (var i = 0; i < unique.length; i++) {
+
+			$('.filter-sort-srv-cont  ul.filters-list.a-z-list').append(' <li class="hidden-sm hidden-xs"><a data-letter="' + unique[i].charCodeAt(0) + '" class=""> ' + unique[i] + ' </a></li>');
+
+
+		}
+
+
+		var options = {
+			valueNames: ['title', { data: ['cat'] }, { data: ['letter'] }]
+		};
+
+		var featureList = new List('e-service-list', options);
+
+
+
+
+		$('.filter-sort-srv-cont > ul > li.sort').click(function () {
+
+			featureList.filter();
+
+			$('.filter-sort-srv-cont  ul.filters-list li a').removeClass('active');
+			$('.filter-sort-srv-cont ul li').removeClass('active');
+			$('.filter-sort-srv-cont .filter-det-cont').addClass('hide');
+
+			$(this).addClass('active');
+
+			$('.filter-sort-srv-cont .filter-det-cont[data-fi-cat=' + $(this).find('div').attr('data-fi-cat') + ']').removeClass('hide');
+
+
+
+		});
+
+
+
+
+		$(document).on("click", ".filter-sort-srv-cont  ul.filters-list li a", function (e) {
+
+			$('.filter-sort-srv-cont  ul.filters-list li a').removeClass('active');
+			$(this).addClass('active');
+			featureList.filter(function (item) {
+				return item.values().cat.trim() == $('ul.filters-list li a.active').attr('data-catg');
+			});
+
+		});
+
+
+
+
+		$(document).on("click", ".filter-sort-srv-cont  ul.filters-list.a-z-list li a", function (e) {
+
+			$('.filter-sort-srv-cont  ul.filters-list.a-z-list li a').removeClass('active');
+			$(this).addClass('active');
+			featureList.filter(function (item) {
+				return item.values().letter.trim() == $('.filter-sort-srv-cont  ul.filters-list.a-z-list li a.active').attr('data-letter');
+			});
+
+		});
+
+
+		$('#filter-none').click(function () {
+			featureList.filter();
+
+			$('ul.filters-list li a').removeClass('active');
+			$(this).addClass('active');
+			return false;
+		});
+
+
+
+	});
+}
+
+
+
+
+
+
+
+
+

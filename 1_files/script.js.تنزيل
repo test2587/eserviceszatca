@@ -1,0 +1,2019 @@
+
+
+var localResources = {
+  ar: {
+   
+    CopyRight:
+      " هيئة الزكاة والضريبة والجمارك - جميع الحقوق محفوظة © " +
+      new Date().getFullYear(),
+    
+  },
+  en: {
+  
+    CopyRight:
+      "Zakat, Tax and Customs Authority - all rights reserved © " +
+      new Date().getFullYear(),
+   
+  },
+};
+
+var $util = function () {};
+
+$util.currentLang =
+  document.location.href.toLowerCase().indexOf("/en/") > 0 ? "en" : "ar";
+$util.LangUrl =
+  document.location.href.toLowerCase().indexOf("/en/") > 0 ? "/en" : "/ar";
+$util.SwitchLangUrl =
+  document.location.href.toLowerCase().indexOf("/en/") > 0 ? "/ar/" : "/en/";
+$util.IsRTL =
+  document.location.href.toLowerCase().indexOf("/en/") > 0 ? false : true;
+
+$util.truncateString = function truncate(string, count) {
+  if (string == undefined || string == null) return "";
+  if (string.length > count)
+    return (
+      string.substring(0, string.substring(0, count).lastIndexOf(" ")) + ".."
+    );
+  else return string;
+};
+
+$util.setCookie = function (cname, cvalue, exdays) {
+  var d = new Date();
+  d.setDate(d.getDate() + exdays);
+  var expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+};
+
+$util.getCookie = function (cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+};
+
+// get the url from URL Fields which their value format is [URL], [Description]
+$util.getUrlFromSPUrlField = function (url) {
+  url = url ? $.trim(url.split(",")[0]) : url;
+  return url;
+};
+
+$util.getSPCurrentSiteUrl = function () {
+  var href = document.location.href.toLocaleLowerCase();
+  return href
+    .substring(href.indexOf("/" + $util.currentLang), href.lastIndexOf("/"))
+    .replace("Pages", "")
+    .replace("pages", "");
+};
+
+$util.getLocalString = function (key) {
+  return localResources[$util.currentLang][key];
+};
+
+$util.getParameterByName = function (name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+  return results === null
+    ? ""
+    : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
+
+
+function ChangeArrow() {
+  $("#GridDiv table tr th a").each(function (index, el) {
+    $(this).addClass("GridAnchor");
+    $(this).append(
+      "<span class='fa fa-sort p5 text-muted'></span>"
+    );
+  });
+}
+if (!window.location.origin) {
+  window.location.origin =
+    window.location.protocol +
+    "//" +
+    window.location.hostname +
+    (window.location.port ? ":" + window.location.port : "");
+}
+
+function GetURL(letter) {
+  var letterDecoded = encodeURI(letter).toUpperCase();
+  window.location.href =
+    window.location.origin +
+    window.location.pathname +
+    "?Letter=" +
+    letterDecoded;
+}
+
+function reset() {
+  window.location.href = window.location.origin + window.location.pathname;
+}
+
+function Search() {
+  var searchVal = document.getElementById("txtSearch").value;
+  if (searchVal != "") {
+    var searchDecoded = encodeURI(searchVal).toUpperCase();
+    window.location.href =
+      window.location.origin +
+      window.location.pathname +
+      "?Keyword=" +
+      searchDecoded;
+  }
+}
+
+function nextPrev(pageNumber) {
+  var currentLoc = document.location.href,
+    queryLoc = currentLoc.indexOf("p="),
+    queryExist = currentLoc.indexOf("?");
+  if (queryLoc != -1) {
+    currentLoc = currentLoc.substr(0, queryLoc) + "p=" + pageNumber;
+  } else if (queryExist == -1) {
+    currentLoc = currentLoc + "?p=" + pageNumber;
+  } else {
+    currentLoc = currentLoc + "&p=" + pageNumber;
+  }
+  document.location = currentLoc;
+}
+
+function pagingControl() {
+  var paging = $(".input-field input").val(),
+    currentLoc = document.location.href,
+    queryLoc = currentLoc.indexOf("p="),
+    queryExist = currentLoc.indexOf("?");
+  if (paging >= 1 && paging <= $(".input-field input").attr("max")) {
+    if (queryLoc != -1) {
+      currentLoc = currentLoc.substr(0, queryLoc) + "p=" + paging;
+    } else if (queryExist == -1) {
+      currentLoc = currentLoc + "?p=" + paging;
+    } else {
+      currentLoc = currentLoc + "&p=" + paging;
+    }
+    document.location = currentLoc;
+  } else {
+    alert("please enter a valid number");
+    return false;
+  }
+}
+$(".paging .input-field input").keypress(function (e) {
+  if (e.which == 13) {
+    pagingControl();
+  }
+});
+
+function addQuery(videoName) {
+  event.preventDefault();
+  var currentLoc = document.location.href,
+    queryLoc = currentLoc.indexOf("&"),
+    queryExist = currentLoc.indexOf("?type");
+  if (queryLoc != -1) {
+    currentLoc = currentLoc.substr(0, queryLoc) + "&VName=" + videoName;
+  } else {
+    currentLoc = currentLoc + "&VName=" + videoName;
+  }
+  document.location = currentLoc;
+}
+
+function videoPage(pageName, videoPage) {
+  var queryLoc = pageName.indexOf("LandingPage.aspx");
+  if (queryLoc != -1) {
+    currentLoc =
+      pageName.substr(0, queryLoc) +
+      "VideoPage.aspx?SCFLD=" +
+      videoPage +
+      "&VName=" +
+      videoPage;
+  } else {
+    if ($language == "ar-SA") {
+      currentLoc =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        _spPageContextInfo.siteServerRelativeUrl +
+        "/ar" +
+        "/Media/Videos/Pages/Pages/VideoPage.aspx?SCFLD=" +
+        videoPage +
+        "&VName=" +
+        videoPage;
+    } else {
+      currentLoc =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        _spPageContextInfo.siteServerRelativeUrl +
+        "/en" +
+        "/Media/Videos/Pages/Pages/VideoPage.aspx?SCFLD=" +
+        videoPage +
+        "&VName=" +
+        videoPage;
+    }
+  }
+  document.location = currentLoc;
+}
+
+function imagesPage(pageName, imagePage) {
+  var queryLoc = pageName.indexOf("LandingPage.aspx");
+  if (queryLoc != -1) {
+    currentLoc =
+      pageName.substr(0, queryLoc) + "ImagesAlbumPage.aspx?SCFLD=" + imagePage;
+  } else {
+    if ($language == "ar-SA") {
+      currentLoc =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        _spPageContextInfo.siteServerRelativeUrl +
+        "/ar" +
+        "/Media/PIcLib/Pages/Pages/ImagesAlbumPage.aspx?SCFLD=" +
+        imagePage;
+    } else {
+      currentLoc =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        _spPageContextInfo.siteServerRelativeUrl +
+        "/en" +
+        "/Media/PIcLib/Pages/Pages/ImagesAlbumPage.aspx?SCFLD=" +
+        imagePage;
+    }
+  }
+  document.location = currentLoc;
+}
+$(document).on("click", ".language-select", function (e) {
+  var currentLang;
+  var otherLang;
+  var websiteaddr = window.location.protocol + "://" + window.location.hostname;
+  if (
+    window.location.href.indexOf("/en/") > -1 ||
+    window.location.href.endsWith("/en")
+  ) {
+    currentLang = "/en";
+    otherLang = "/ar";
+  } else {
+    currentLang = "/ar";
+    otherLang = "/en";
+  }
+  var url = window.location.href;
+  if (url == "/") {
+    url = "/ar";
+  }
+  window.location.href = url.replace(currentLang, otherLang);
+});
+$(document).ready(function () {
+  $(".carousel-inner .item:first").addClass("active");
+  $(".carousel").carousel({ interval: 3000 });
+  var navListItems = $("ul.setup-panel li"),
+    allWells = $(".setup-content"),
+    allNextBtn = $(".nextBtn"),
+    allPrevBtn = $(".prevBtn");
+  allWells.hide();
+  navListItems.click(function (e) {
+    e.preventDefault();
+    $item = $(this);
+    targetId = $(this).attr("href");
+    console.log(targetId);
+    var $target = $("#" + targetId);
+    if ($("[id*=hdnStepNumber]").val() == 3) {
+      $target = $("#step-3");
+      console.log("Done Test 3");
+      $item = $("ul.setup-panel li:eq(2)");
+      $item.removeAttr("disabled");
+    } else if ($("[id*=hdnStepNumber]").val() == 4) {
+      $target = $("#step-4");
+      console.log("Done Test 4");
+      $item = $("ul.setup-panel li:eq(3)");
+      $item.removeAttr("disabled");
+    }
+    $target.addClass("teeeest");
+    if (!$item.hasClass("disabled")) {
+      navListItems.removeClass("current").addClass("btn-default");
+      $item.addClass("current");
+      allWells.hide();
+      $target.show();
+      $target.find("input:eq(0)").focus();
+    }
+  });
+  allNextBtn.click(function () {
+    var curStep = $(this).closest(".setup-content"),
+      curStepBtn = curStep.attr("id"),
+      nextStepWizard = $('.setup-panel li[href="' + curStepBtn + '"]').next(),
+      curInputs = curStep.find("input[type='text'],input[type='url'],select"),
+      isValid = true;
+    $(".form-group").removeClass("has-error");
+    for (var i = 0; i < curInputs.length; i++) {
+      if (!curInputs[i].validity.valid) {
+        isValid = false;
+        $(curInputs[i]).closest(".form-group").addClass("has-error");
+      }
+    }
+    if (isValid) nextStepWizard.removeAttr("disabled").trigger("click");
+  });
+  allPrevBtn.click(function () {
+    var curStep = $(this).closest(".setup-content"),
+      curStepBtn = curStep.attr("id"),
+      prevStepWizard = $('.setup-panel li[href="' + curStepBtn + '"]').prev();
+    $(".form-group").removeClass("has-error");
+    prevStepWizard.removeAttr("disabled").trigger("click");
+  });
+  $("ul.setup-panel li.current").trigger("click");
+  $(".SaveReleaseGoods").submit(function (event) {
+    alert("Handler for .submit() called.");
+    event.preventDefault();
+  });
+  $(".nav-tabs.releaseGoodsTabs")
+    .find("li")
+    .eq(1)
+    .click(function () {
+      $("[id*=hdntabName]").attr("value", "2");
+      localStorage.setItem("SaveReleaseGoods", "2");
+      console.log(localStorage.getItem("SaveReleaseGoods"));
+    });
+  $(".nav-tabs.releaseGoodsTabs")
+    .find("li")
+    .eq(0)
+    .click(function () {
+      $("[id*=hdntabName]").attr("value", "1");
+      localStorage.setItem("SaveReleaseGoods", "1");
+      console.log(localStorage.getItem("SaveReleaseGoods"));
+    });
+  if (
+    $("[id*=hdntabName]").attr("value") == 2 ||
+    localStorage.getItem("SaveReleaseGoods") == "2"
+  ) {
+    $(".nav-tabs.releaseGoodsTabs li").last().addClass("active");
+    $(".nav-tabs.releaseGoodsTabs li").first().removeClass("active");
+    $("#step2").addClass("active in").removeClass("fade");
+    $("#step1").removeClass("active in");
+  } /* (function(i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r;
+          i[r] = i[r] || function() {
+              (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+          a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+          a.async = 1;
+          a.src = g;
+          m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+      var paths = window.location.pathname.split("/");
+      ga('create', 'UA-93487291-1', 'auto');
+      ga('send', 'pageview'); */
+  $(".RecruitmentTable").find("div").eq(0).css("float", "right");
+  $(".disabled-control").removeClass("form-control");
+  $(".disabled-control").css("background", "transparent");
+  $(".AdminTip1").each(function (index, el) {
+    var applicants = $(this).attr("title");
+    if (applicants.indexOf("عرض المتقدمين(0)") >= 0) {
+      $(this).css("color", "#a09dab");
+      $(this).removeClass("fa-group");
+      $(this).addClass("fa-crop");
+    }
+  });
+  $(".col-md-15 input").addClass("btn btn-primary BckBtn");
+  if (!$("ul.pagination").has("li").length) {
+    $("ul.pagination").css("display", "none");
+    $("ul.pagination").parent("div.DataPager").css("display", "none");
+  }
+  if ($(".pagination").html() == "") {
+    $("this").css("display", "none");
+    $("this").parent("div.DataPager").css("display", "none");
+  }
+  $(".BidsGrid").removeClass("table-responsive");
+
+  $(".AdminTip1").each(function () {
+    var tooltip = $(this).attr("title");
+    tooltip = tooltip.match(">(.*)</span>");
+    $(this).attr("title", tooltip[1]);
+  });
+  $(".Print").click(function () {
+    var divElements = $(".RecruitmentTable").html();
+    var oldPage = document.body.innerHTML;
+    document.body.innerHTML =
+      "<html><head><title></title></head><body>" + divElements + "</body>";
+    window.print();
+    document.body.innerHTML = oldPage;
+  });
+  $(".PrintAll").click(function () {
+    var divElementsAll = $(".inner").html();
+    var originalCSSLink = "/_layouts/15/1025/styles/SCustoms/style.css";
+    var WinPrint = window.open(
+      "",
+      "",
+      "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=1,status=0"
+    );
+    WinPrint.document.write("<html><head>");
+    WinPrint.document.write(
+      '<link rel="stylesheet" type="text/css" href="' +
+        originalCSSLink +
+        '" media="all" />'
+    );
+    WinPrint.document.write(
+      '<style>*{background:none!important;background-color:transparent !important ;color:#000!important;}.page .panel-group .greyPanel2 > a{background:none !important}.collapse{display:block !important;height:auto !important}h3{font-size:20px;}li{float:right;}.FontContainer{display:none !important;} header,footer,.LeftNav,.breadcrumb ,.ms-cui-ribbonTopBars,.s4-notdlg{display:none}.panel-title > a.collapsed:after ,.panel-title > a:after {content:""!important}@media print {.printMe{display:none}.FontContainer{display:none !important;}h3{font-size:20px;} header,footer,.LeftNav,.breadcrumb ,.ms-cui-ribbonTopBars,.s4-notdlg{display:none}.printMe{display:none !Important}.collapse{display:block !important;height:auto !important}.collapse{display:block !important;height:auto !important}.page .panel-group .greyPanel2 > a,.page .panel-group .greyPanel2 > a.collapsed{background:none !important}.panel-title > a.collapsed:after ,.panel-title > a:after {content:""!important}}</style>'
+    );
+    WinPrint.document.write("</head><body>");
+    WinPrint.document.write(
+      '<img src="http://www.customs.gov.sa/_layouts/15/1025/images/SCustoms/main-logo-1.png"><img src="http://www.customs.gov.sa/_layouts/15/1025/images/sCustoms/main-title.png" style=" margin:5px 10px""><INPUT TYPE="button" value="طباعة" onClick="window.print()" class="btn btn-primary printMe" style="float:left;margin:20px !important;width:60px;font-weight:700;">'
+    );
+    WinPrint.document.write(divElementsAll);
+    WinPrint.document.write("</body></html>");
+    WinPrint.document.close();
+    WinPrint.focus();
+  });
+  if ($(".col-md-11.col-md-pull-4.column").find(".LeftNav")) {
+    $(".LeftNav").insertAfter(".col-md-11.col-md-pull-4.column");
+  }
+  var servicesDecoded = encodeURI(
+      "موقع الخدمات الالكترونية/Pages/Pages"
+    ).toUpperCase(),
+    upperHref = window.location.href.toUpperCase();
+  if (
+    window.location.href.match(
+      "SC.SharePoint.Internet.Reporting/Reports.aspx"
+    ) ||
+    window.location.href.indexOf("ListEServiceLinks.aspx") > -1 ||
+    upperHref.indexOf(servicesDecoded) > -1 ||
+    upperHref.indexOf("/ESERVICESADMIN") > -1 ||
+    upperHref.indexOf("/RECRUITMENT") > -1 ||
+    window.location.href.indexOf("موقع%20الخدمات%20الالكترونية") > -1 ||
+    window.location.href.indexOf("EServicesReleaseGoods") > -1 ||
+    window.location.href.indexOf("SASOSearchPage") > -1
+  ) {
+    $(".col-md-4.column.LeftNav.s4-notdlg")
+      .hide()
+      .removeClass("col-md-4")
+      .find(".ads")
+      .remove()
+      .end()
+      .prev(".col-md-11")
+      .removeClass("col-md-11 col-md-pull-4 column")
+      .addClass("col-xs-15 newFullServices")
+      .parent(".row")
+      .removeClass("row");
+    $(".newFullServices").prepend(
+      '<div class="newMenuSerices"><a href="#" class="s4-notdlg serviceToggleIcon"><i class="fa fa-bars"></i></a></div>'
+    );
+    $(".LeftNav").appendTo(".newMenuSerices");
+    $("body").on("click", ".serviceToggleIcon", function () {
+      $(this).toggleClass("openedMenu");
+      $(".LeftNav").slideToggle();
+    });
+  }
+  $(".custom-map-title1").parent("div").remove();
+  if (window.location.href.indexOf("/CustomPorts/") > -1) {
+    $("#MSOZoneCell_WebPartWPQ5").appendTo(".PortImagesTab");
+    $("#MSOZoneCell_WebPartWPQ6").appendTo(".PortVideosTab");
+  }
+  if (window.location.href.indexOf("/SCPortInformation") > -1) {
+    $(".PortsTabs").remove();
+  }
+  $(".PortsNav").find("img").parent("a").append('<i class="fa fa-home"></i>');
+  $(".PortsNav").find("img").remove();
+  //$(".PortsSlider, .portsDetails").find(".bx-prev").eq(0).css("display", "none");
+  //$(".PortsSlider, .portsDetails").find(".bx-next").eq(0).css("display", "none");
+  //$('.PortSlider .bxslider').bxSlider({ mode: 'fade', captions: true, easing: 'linear', controls: true, auto: true });
+  $(".EventSection").click(function () {
+    $(".IconContainer").removeClass("IconContSelected");
+    $(".LinkContainer").removeClass("LinkContSelected");
+    $(".EventSection a").removeClass("LinkSelected");
+    $(this).find(".IconContainer").addClass("IconContSelected");
+    $(this).find(".LinkContainer").addClass("LinkContSelected");
+    $(this).find("a").addClass("LinkSelected");
+  });
+  $(".EventSection")
+    .eq(0)
+    .click(function () {
+      $(".EventDetailsCont, .EventAgendaCont , .EventPlaceCont").removeClass(
+        "ShowEvent"
+      );
+      $(".EventDetailsCont").addClass("ShowEvent");
+    });
+  $(".EventSection")
+    .eq(1)
+    .click(function () {
+      $(".EventDetailsCont, .EventAgendaCont , .EventPlaceCont").removeClass(
+        "ShowEvent"
+      );
+      $(".EventPlaceCont").addClass("ShowEvent");
+    });
+  $(".EventSection")
+    .eq(2)
+    .click(function () {
+      $(".EventDetailsCont, .EventAgendaCont , .EventPlaceCont").removeClass(
+        "ShowEvent"
+      );
+      $(".EventAgendaCont").addClass("ShowEvent");
+    });
+  $(".EventSection").click(function () {
+    $(".IconContainer").removeClass("IconContSelected");
+    $(".LinkContainer").removeClass("LinkContSelected");
+    $(".EventSection a").removeClass("LinkSelected");
+    $(this).find(".IconContainer").addClass("IconContSelected");
+    $(this).find(".LinkContainer").addClass("LinkContSelected");
+    $(this).find("a").addClass("LinkSelected");
+  });
+  $(".EventSection")
+    .eq(0)
+    .click(function () {
+      $(".EventDetailsCont, .EventAgendaCont , .EventPlaceCont").removeClass(
+        "ShowEvent"
+      );
+      $(".EventDetailsCont").addClass("ShowEvent");
+    });
+  $(".EventSection")
+    .eq(1)
+    .click(function () {
+      $(".EventDetailsCont, .EventAgendaCont , .EventPlaceCont").removeClass(
+        "ShowEvent"
+      );
+      $(".EventPlaceCont").addClass("ShowEvent");
+    });
+  $(".EventSection")
+    .eq(2)
+    .click(function () {
+      $(".EventDetailsCont, .EventAgendaCont , .EventPlaceCont").removeClass(
+        "ShowEvent"
+      );
+      $(".EventAgendaCont").addClass("ShowEvent");
+    });
+  $(".ms-core-listMenu-horizontalBox li").eq(3).hide();
+  $("#PortsTablesDiv").find("ul").removeClass("nav-pills");
+  $("#PortsTablesDiv").find("ul").addClass("nav-tabs");
+  $(".alphabets li a").click(function () {});
+  $(".randomAdvice, .InnerDesc, .NewsText, .events.entries p").each(
+    function () {
+      var adv = $(this).text();
+      adv = adv.substr(0, adv.lastIndexOf(" ")) + " ...";
+      $(this).text(adv);
+    }
+  );
+  $(".EventMoreLink").appendTo(".entries p");
+  $(".PortsNav li a.active").each(function () {
+    $(this).removeClass("active");
+    $(this).parent("li").addClass("active");
+  });
+  $(".media-body").each(function () {
+    var adv = $(this).text();
+    adv = adv.substr(0, adv.lastIndexOf(" ")) + " ...";
+  });
+  $('a[href$=".pdf"]').each(function () {
+    $(this).prop("target", "_blank");
+  });
+  $("span.coverMedia").each(function () {
+    if ($(this).css("background-image").indexOf("new_avatar.jpg") > -1) {
+      $(this).attr("style", "");
+      $(this).addClass("NewsDefault");
+    } else if ($(this).css("background-image").indexOf("main-logo") > -1) {
+      $(this).attr("style", "");
+      $(this).addClass("NewsDefault2");
+    }
+  });
+  if ($(".pagination").length) {
+    var pages = $(".pagination li").not(".nextPrev"),
+      pagesNo = $(".pagination li").length;
+    pages.each(function (index, el) {
+      if ($(this).hasClass("active")) {
+        $activNo = index;
+      }
+    });
+    if (pagesNo > 9) {
+      $(".pagination li").not(".nextPrev").hide();
+      if ($activNo < 4) {
+        for (i = 0; i < 7; i++) {
+          pages.eq(i).show();
+        }
+      } else if ($activNo >= pagesNo - 6) {
+        for (i = pagesNo; i > pagesNo - 12; i--) {
+          pages.eq(i).show();
+        }
+      } else {
+        for (i = $activNo - 3; i <= $activNo + 3; i++) {
+          pages.eq(i).show();
+        }
+      }
+    }
+  }
+  $("#Tab2 a").click(function () {
+    $("#cat1").css("display", "none");
+    $("#cat2").css("display", "block");
+    $(".SpeServices").css("color", "#1f6997");
+    $(".AllServices").css("color", "#000");
+  });
+  $("#Tab1 a").click(function () {
+    $("#cat2").css("display", "none");
+    $("#cat1").css("display", "block");
+    $(".AllServices").css("color", "#1f6997");
+    $(".SpeServices").css("color", "#000");
+  });
+  $(".Agenda").click(function () {});
+  $(".DetailsEvent").click(function () {
+    $(".EventDetails").css("display", "block");
+  });
+  $(".PlaceAndTime").click(function () {});
+  $language = _spPageContextInfo.currentCultureName;
+  if ($language == "ar-SA") {
+    $(".show-english").remove();
+  } else {
+    $(".show-arabic").remove();
+  }
+  $("ul.dynamic").addClass("SpecialMenu");
+  $("li.static").each(function () {
+    if ($(this).find("ul").length) {
+      $(this).find("span.menu-item-text").addClass("Addbg");
+      $(this).find("ul").addClass("SpecialMenu");
+    }
+  });
+  $("span.dynamic-children").each(function () {
+    $(this).addClass("MenuText");
+  });
+  $("li.dynamic-children").hover(
+    function () {
+      $(this).removeClass("MenuText");
+      $(this).addClass("MenuTextWhite");
+    },
+    function () {
+      $(this).removeClass("MenuTextWhite");
+      $(this).addClass("MenuText");
+    }
+  );
+  $(".static.dynamic-children.menu-item.ms-core-listMenu-item").attr(
+    "href",
+    "#_"
+  );
+  $("body").on("click", ".mobileMenu li.dynamic-children", function () {
+    $(this).toggleClass("showChild");
+  });
+  $("li.selected").each(function () {
+    $(this).find("span.MenuText").removeClass("MenuText");
+  });
+  $(".dropdown-menu input,.dropdown-menu , .dropdown-menu label").click(
+    function (e) {
+      e.stopPropagation();
+    }
+  );
+  $(".dropdown-toggle").click(function () {
+    $(this).next(".dropdown-menu").slideToggle(500);
+  });
+
+  $(".myModalEdit").click(function () {
+    $(".bs-example-modal-lg").modal("show");
+  });
+
+  /*
+          function DefaultStyle() { $(".CurrentTheme").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/default.jpg");
+              $(".decreaseFont").find("img").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/decrease-font.png");
+              $(".increaseFont").find("img").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/increase-font.png") }
+
+          function CyanStyle() { $('head').append('<link rel="stylesheet" href="/_layouts/15/1025/Styles/SCustoms/Cyan.css" type="text/css" id="Cyan"/>');
+              $(".CurrentTheme").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/cyan.jpg");
+              $(".decreaseFont").find("img").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/decrease-font-cyan.png");
+              $(".increaseFont").find("img").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/increase-font-cyan.png") }
+
+          function GreenStyle() { $('head').append('<link rel="stylesheet" href="/_layouts/15/1025/Styles/SCustoms/Green.css" type="text/css" id="Green"/>');
+              $(".CurrentTheme").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/green.jpg");
+              $(".decreaseFont").find("img").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/decrease-font-green.png");
+              $(".increaseFont").find("img").attr("src", "/_layouts/15/1025/IMAGES/SCustoms/increase-font-green.png") }
+          if ($.cookie('Cyan') == 'true') { CyanStyle(); }
+          if ($.cookie('Green') == 'true') { GreenStyle(); }
+          $(".Cyan").click(function() { $.cookie("Green", null); if ($.cookie('Cyan') != 'true') { CyanStyle();
+                  $.cookie('Cyan', 'true'); } else { $("#Cyan").remove();
+                  $.cookie('Cyan', 'false'); } });
+          $(".Green").click(function() { $.cookie("Cyan", null); if ($.cookie('Green') != 'true') { GreenStyle();
+                  $.cookie('Green', 'true'); } else { $("#Green").remove();
+                  $.cookie('Green', 'false'); } });
+          $(".Defualt").click(function() { DefaultStyle();
+              $("#Green").remove();
+              $("#Cyan").remove();
+              $.cookie('Green', 'false');
+              $.cookie('Cyan', 'false'); });
+              */
+  if ($(".NewsDataContainer").length) {
+    $(".panel-inner").addClass("PanelHome");
+    $("#accordion").parent("div.panel-default").addClass("HomeAccordion");
+    $(".col-xs-7").find(".ms-rte-embedwp").find("img").css("height", "97px");
+    $(".col-xs-8").find(".ms-rte-embedwp").find("img").css("height", "97px");
+    $(".col-xs-8").find(".ms-rte-embedwp").find("img").css("width", "246px");
+    $(".col-xs-7")
+      .find(".ms-rte-embedwp")
+      .find("img")
+      .css("margin-top", "-10px");
+    $(".col-xs-8")
+      .find(".ms-rte-embedwp")
+      .find("img")
+      .css("margin-top", "-10px");
+    $(".col-xs-8")
+      .find(".ms-rte-embedwp")
+      .find("div.panel-default")
+      .css("margin-top", "-10px");
+    $(".col-sm-5").find("div.panel-default").eq(2).css("margin-top", "-10px");
+    $(".col-xs-7").css("margin-top", "5px");
+    $(".hidden-xs").css("margin-top", "0px");
+    $(".col-xs-8").css("margin-top", "5px");
+    $(".col-xs-7.FloatHeaderLogo").css("margin-top", "0px");
+    $(".col-xs-8.FloatHeader").css("margin-top", "-2px");
+    $("#accordion")
+      .find("ul")
+      .find("div.panel-heading")
+      .eq(1)
+      .prev("li")
+      .addClass("marginacc");
+    $("#accordion")
+      .find("ul")
+      .find("div.panel-heading")
+      .eq(2)
+      .prev("li")
+      .addClass("marginacc2");
+    $("#accordion")
+      .find("ul")
+      .find("div.panel-heading")
+      .eq(3)
+      .prev("li")
+      .addClass("marginacc3");
+    $(".FooterTemp").css("margin-top", "-30px");
+    $(".searchForm").css("margin-bottom", "5px");
+    $(".top-links").next("div").find("row").css("padding-top", "20px;");
+    $(".panel-body").eq(0).find("div.row").css("padding-top", "20px;");
+    $(".col-sm-10 .panel").css("background-color", "#fff");
+    $(".col-sm-5 .panel").css("background-color", "#fff");
+    $("footer").css("margin-top", "-20px");
+    $("#Allegiance").modal("show");
+  } else {
+    $(".col-xs-7.FloatHeaderLogo").css("margin-top", "0px");
+    $(".col-xs-8.FloatHeader").css("margin-top", "-2px");
+  }
+  if ($(".testhead a span").length) {
+    //$(".testhead a").addClass("btn-primary");
+    //$(".dropdown-menu a").removeClass("btn-primary");
+    $(".testhead a").css("display", "inline-block");
+  } else {
+    // $(".testhead a").removeClass("btn-primary");
+    $(".testhead a").css("display", "none");
+  }
+  $(".news-ticker .col-xs-2").addClass("TickerLabel");
+  $(".container").removeClass("FullContainer");
+  $(".panel-inner").removeClass("PaddedInner");
+  $("#CssRegistration5").attr("disabled", " ");
+  $('link[rel="HeadingStylesheet"]').prop("disabled", true);
+  $(".top-links").removeClass("TopLinksFull");
+  $(".panel-body").removeClass("PanelFull");
+  $(".panel-default").removeClass("PanelBg");
+  $("a.MagItem").each(function () {
+    var url = $(this).attr("href");
+    url =
+      "sites/sc/ar/_layouts/15/SC.SharePoint.Internet.Portal/PDFReader.html?pdfUrl=" +
+      url;
+    $(this).attr("href", url);
+    $(this).removeAttr("onclick").attr("target", "_blank");
+  });
+  $(".ms-dlg-heading").css("display", "none");
+  $(".cqfeed").css("display", "none");
+  $(".ms-siteicon-img").attr(
+    "src",
+    "/_layouts/15/1025/images/SCustoms/main-logo-1.png"
+  );
+  $(".breadcrumb")
+    .find("span")
+    .find("span")
+    .last()
+    .css("display", "none")
+    .prev("span")
+    .css("display", "none");
+  $(".breadcrumb")
+    .find("span")
+    .find("span")
+    .first()
+    .css("display", "none")
+    .next("span")
+    .css("display", "none")
+    .next()
+    .find("a")
+    .html('<i class="fa fa-home"></i>');
+  $(".SpecialMenu").find("span").removeClass("Addbg");
+  $("#zz13_RootAspMenu").find(".dynamic-children").css("color", "red");
+  $(
+    "#ctl00_PlaceHolderMain_EditModePanel1_ctl03__ControlWrapper_RichHtmlField"
+  ).prepend($(".ms-rtestate-field"));
+  $(".month-events").find(".currentMonth").text("1437");
+  $(".TopNavPadding").find("li.required").css("display", "none");
+  $(".mag").css("display", "none");
+  $(".mag").eq(0).css("display", "block");
+  $("li.ThumbnailMagCont").each(function () {
+    $(this)
+      .parent("div.panel-inner")
+      .find(".mag")
+      .eq(0)
+      .find("ul.thumbs")
+      .append($(this));
+    $("ul.thumbs").append($(this));
+  });
+  $(".MainMagImg").each(function () {
+    var URL = $(this).attr("src");
+    if (URL.indexOf(",") != -1) {
+      var url2 = URL.substring(0, URL.indexOf(","));
+      $(this).attr("src", url2);
+    }
+  });
+  var str = $(".mag-info h2").eq(0).text();
+  var pattern = /[0-9]+/g;
+  var matches = str.match(pattern);
+  var file =
+    "sites/sc/ar/Media/SCMagazine/Lists/SCMagazines/" +
+    "Book" +
+    matches +
+    ".pdf";
+  var file2 =
+    "sites/sc/ar/_layouts/15/SC.SharePoint.Internet.Portal/PDFReader.html?pdfUrl=sites/sc/ar/Media/SCMagazine/Lists/SCMagazines/" +
+    "Book" +
+    matches +
+    ".pdf";
+  $(".MagThumbIcon").click(function () {
+    FirstIndexKeep = FirstIndex;
+    $(".ThumbnailMagCont").removeClass("ActiceMag");
+    $(this).parent(".ThumbnailMagCont").addClass("ActiceMag");
+    var currentindex = $(this).parent(".ThumbnailMagCont").index();
+    var MagSrc = $(".mag").eq(currentindex).find(".MainMagImg").attr("src");
+    $(".MainMagImg").attr("src", MagSrc);
+    var MagSrc = $(".MainMagImg").eq(currentindex).attr("src");
+    var MagSrc2 = $(this).find("img").attr("src");
+    $(".MagTitleThumb").attr("src", MagSrc2);
+    var index = MagSrc.lastIndexOf("/") + 1;
+    var filenameWithExtension = MagSrc.substr(index);
+    var filename = filenameWithExtension.split(".")[0];
+    $(".MagTitle").text(filename);
+  });
+  $(".ThumbnailMagCont").each(function () {
+    $(this)
+      .parent("div.panel-inner")
+      .find(".mag")
+      .eq(0)
+      .find("ul.thumbs")
+      .append($(this));
+  });
+  $(".MagThumbIcon").each(function () {
+    var URL = $(this).find("img").attr("src");
+    if (URL.indexOf(",") != -1) {
+      var url2 = URL.substring(0, URL.indexOf(","));
+      $(this).find("img").attr("src", url2);
+    }
+  });
+  $(".service-img img").each(function () {
+    var URL = $(this).attr("src");
+    if (URL.indexOf(",") != -1) {
+      var url2 = URL.substring(0, URL.indexOf(","));
+      $(this).attr("src", url2);
+    }
+  });
+  $(".MainMagImg").each(function () {
+    var URL = $(this).attr("src");
+    if (URL.indexOf(",") != -1) {
+      var url2 = URL.substring(0, URL.indexOf(","));
+      $(this).attr("src", url2);
+    }
+  });
+  $(".ReadMag").click(function () {
+    var pathmag = $(".MainMagImg").eq(0).attr("src");
+    $(this).attr("href", file);
+  });
+  $(".ReadMag2").click(function () {
+    var pathmag = $(".MainMagImg").eq(0).attr("src");
+    $(this).attr("href", file2);
+    $(this).removeAttr("onclick").attr("target", "_blank");
+  });
+  if (window.location.href.indexOf("News") > -1) {
+    $(".ms-rtestate-field").find("img").addClass("thumbnail");
+  }
+  if (window.location.href.indexOf("ListEServiceLinks") > -1) {
+    $(".Eservices-slider  .nav-pills").find("li").eq(0).css("display", "none");
+    $(".show-arabic").each(function () {
+      var URL = $(this).find("img").attr("src");
+      if (URL.indexOf(",") != -1) {
+        var url2 = URL.substring(0, URL.indexOf(","));
+        $(this).find("img").attr("src", url2);
+      }
+    });
+  }
+  if (
+    window.location.href.indexOf("/en") > -1 ||
+    window.location.href.indexOf("/en-us") > -1
+  ) {
+    $(".Commitment").attr("href", "/sites/sc/en/CommitmentGateway");
+    $(".Commitment")
+      .find("img")
+      .attr("src", "/_layouts/15/1033/images/SCustoms/eltezam.jpg");
+    $(".Center").attr("href", "/sites/sc/en/TrainingInstitute/");
+    $(".Center")
+      .find("img")
+      .attr("src", "/_layouts/15/1033/images/SCustoms/ma3had.jpg");
+    $("a.reports")
+      .find("img")
+      .attr("src", "/_layouts/15/1033/images/SCustoms/bala3at.jpg");
+    $(".decreaseFont")
+      .find("img")
+      .attr("src", "/_layouts/15/1033/IMAGES/SCustoms/decrease-font.png");
+    $(".increaseFont")
+      .find("img")
+      .attr("src", "/_layouts/15/1033/IMAGES/SCustoms/increase-font.png");
+    $(".fa-angle-double-left").addClass("fa fa-angle-double-right");
+    $(".fa-angle-double-left").removeClass("fa-angle-double-left");
+    $(".news-ticker").eq(1).css("display", "none");
+    $(".TickerEN").css("display", "block");
+  }
+  if (
+    window.location.href.indexOf(
+      "/%D9%85%D9%88%D9%82%D8%B9%20%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A%D8%A9/"
+    ) > -1
+  ) {
+    $(".breadcrumb span")
+      .find("span")
+      .eq(4)
+      .find("a")
+      .attr("href", "/sites/sc/ar/Pages/Pages/ListEServiceLinks.aspx");
+  }
+  if (window.location.href.indexOf("/EditImporterUser") > -1) {
+    $(".VerifyBtnCont ").css("right", "720px");
+  }
+
+  setInterval(function () {
+    if (window.location.href.indexOf("/ObjectionRequestsListPage") > -1) {
+      $(".GridAnchor").last().css("width", "100%");
+      $(".table-striped tr th").css("width", "12%");
+    }
+  }, 500);
+  if ($(".NewsDataContainer").length) {
+    $(".description")
+      .find("a")
+      .each(function (i) {
+        var string = $(this).text();
+        var string2 = string.substring(0, 46);
+        $(this).text(string2 + "...");
+      });
+  }
+  if (
+    window.location.href.indexOf("CustomPorts") > -1 ||
+    window.location.href.indexOf("importantterms") > -1 ||
+    window.location.href.indexOf("SCTariffs") > -1
+  ) {
+    $(".FontContainer").css("display", "none");
+  }
+  if (window.location.href.indexOf("SCMagazine") > -1) {
+    $("ul.magazinesHome figure img").css("width", "125px");
+    $("ul.magazinesHome figure img").css("height", "168px");
+  }
+  $("li.MagItem").each(function () {
+    var URL = $(this).find("img").attr("src");
+    if (URL.indexOf(",") != -1) {
+      var url2 = URL.substring(0, URL.indexOf(","));
+      $(this).find("img").attr("src", url2);
+    }
+  });
+  $(".RegItemSub").each(function () {
+    if ($(this).find("h4 a").length) {
+    } else {
+      $(this).css("display", "none");
+      $(this).prev(".RegPanel").css("display", "none");
+    }
+  });
+  $(
+    "#ctl00_SPWebPartManager1_g_a62e559c_b2dc_4819_9d05_31324a8ec4d8_ctl00_updPanel, #ctl00_SPWebPartManager1_g_e59e46dd_5d14_429b_b42f_9af9f654e363_ctl00_updPanel, #ctl00_SPWebPartManager1_g_5b7bb03a_5f02_4065_a8b6_b8bf27875dde_ctl00_updPanel, #ctl00_SPWebPartManager1_g_13da425e_512b_47a2_8ac4_69ea0c5d9fe4_ctl00_updPanel"
+  ).removeClass("table-responsive");
+  $(".DataPager, .dropdown, .Action").removeClass("table-responsive");
+  // $('.jobAvailiblePeriod .control-label').removeClass('col-sm-2').addClass('col-sm-3');
+  //$('.Adminjmbotron .CalendarCont2 .control-label').removeClass('col-sm-2').addClass('col-sm-3');
+  $(".registerCaptcha .control-label")
+    .removeClass("col-sm-2")
+    .addClass("col-sm-3");
+  //ChangeArrow();
+  $(".ProfileLink, .ObjectionBtn").each(function () {
+    var GridLink = $(this).attr("href");
+    GridLink = GridLink.substring(
+      GridLink.indexOf("/sites/"),
+      GridLink.lastIndexOf('"')
+    );
+    $(this).attr("href", GridLink);
+    $(this).attr("target", "_blank");
+  });
+  $("#GridDiv table tr th a").click(function () {
+    $(this).find("span.caret").addClass("arrow-up");
+    $(this).find("span.caret").removeClass("caret");
+  });
+  $(".searchForm").addClass("SearchWebpart");
+  if (window.location.href.indexOf("/ar") > -1) {
+    $(".ms-srch-sb input").val("البحث في الموقع");
+    $(".ms-srch-sb input").focus(function () {
+      if ($(".ms-srch-sb input").val() == "البحث في الموقع") {
+        $(".ms-srch-sb input").val("");
+      }
+    });
+    $(".ms-srch-sb input").blur(function () {
+      if ($(".ms-srch-sb input").val() == "") {
+        $(".ms-srch-sb input").val("البحث في الموقع");
+      }
+    });
+  }
+  if (window.location.href.indexOf("/en") > -1) {
+    $(".ms-srch-sb input").val("Search this site");
+    $(".ms-srch-sb input").focus(function () {
+      if ($(".ms-srch-sb input").val() == "Search this site") {
+        $(".ms-srch-sb input").val("");
+      }
+    });
+    $(".ms-srch-sb input").blur(function () {
+      if ($(".ms-srch-sb input").val() == "") {
+        $(".ms-srch-sb input").val("Search this site");
+      }
+    });
+    $(".fontInnerTextSelector").html("Font: ");
+    $(".printInnerTextSelector").html("Print: ");
+
+    $(".sendInnerTextSelector").html("Send: ");
+    $(".sourceInnerTextSelector").html("Source: ");
+    $(".publishDateInnerTextSelector").html("Publish Date: ");
+    $(".twitterInnerTextSelector").html(" Twitter ");
+    $(".sendInnerTextSelector").html("Send: ");
+    $(".mediaCenterInnerTextSelector").html("Media Center ");
+    $(".imagesGalleryInnerTextSelector").html("Images Alboums ");
+    $(".videoGalleryInnerTextSelector").html("Videos ");
+    $(".newsGalleryInnerTextSelector").html("News Archive ");
+    $(".magazineGalleryInnerTextSelector").html("Customs Magazine ");
+  }
+  try {
+    $(window).scrollTop($("#press-page").offset().top);
+  } catch (err) {}
+  try {
+    $(window).scrollTop($(".searchForm").offset().top);
+  } catch (err) {}
+  try {
+    $(window).scrollTop($("#videoHeader").offset().top);
+  } catch (err) {}
+  try {
+    $language = _spPageContextInfo.currentCultureName;
+    $path = _spPageContextInfo.siteServerRelativeUrl;
+    if ($path == "/") $path = "";
+    if (
+      $(
+        ".datepicker-hijri:not([LocalInitiation]), .datepicker-gregorian:not([LocalInitiation])"
+      ).length > 0
+    )
+      InitiateCalenders();
+    SP.UI.ModalDialog.showModalDialog(options);
+    if (jQuery(window).scrollTop() > 0)
+      jQuery(".ms-dlgContent").css(
+        "top",
+        jQuery(window).scrollTop() +
+          (jQuery(window).height() - jQuery(".ms-dlgContent").height()) / 2 +
+          "px"
+      );
+  } catch (err) {}
+  var body = $(".panel-body").find("*"),
+    originalFontSize = body.css("font-size");
+  $(".resetFont").click(function () {
+    body.css("font-size", originalFontSize);
+  });
+  $(".increaseFont").click(function () {
+    if ($(".NewsDataContainer").length) {
+    } else {
+      var currentFontSize = body.css("font-size");
+      var currentFontSizeNum = parseFloat(currentFontSize, 10);
+      if (currentFontSizeNum <= 16) {
+        var newFontSize = currentFontSizeNum * 1.05;
+        body.css("font-size", newFontSize);
+        return false;
+      }
+    }
+  });
+  $(".decreaseFont").click(function () {
+    if ($(".NewsDataContainer").length) {
+    } else {
+      var currentFontSize = body.css("font-size");
+      var currentFontSizeNum = parseFloat(currentFontSize, 10);
+      if (currentFontSizeNum >= 11) {
+        var newFontSize = currentFontSizeNum * 0.95;
+        body.css("font-size", newFontSize);
+        return false;
+      }
+    }
+  });
+  $(".vertical-slider ul li").addClass("clearfix");
+  $(".vertical-slider").appendTo("aside");
+  var verticalSlider = {
+      mode: "vertical",
+      pager: false,
+      autoStart: false,
+      nextSelector: "aside .vertical-slider .next-control",
+      prevSelector: "aside .vertical-slider .prev-control",
+      auto: true,
+      minSlides: 4,
+      maxSlides: 4,
+      moveSlides: 1,
+      prevText: '<i class="fa fa-angle-up"></i>',
+      nextText: '<i class="fa fa-angle-down"></i>',
+    },
+    verticalSlider2 = {
+      mode: "vertical",
+      pager: false,
+      autoStart: true,
+      nextSelector: ".vertical-slider2 .next-control",
+      prevSelector: ".vertical-slider2 .prev-control",
+      auto: true,
+      minSlides: 3,
+      maxSlides: 3,
+      moveSlides: 1,
+      prevText: '<i class="fa fa-angle-up"></i>',
+      nextText: '<i class="fa fa-angle-down"></i>',
+      infiniteLoop: true,
+    },
+    serviceSlider = {
+      infinite: false,
+      slidesToShow: 5,
+      slidesToScroll: 5,
+      rtl: true,
+      slide: "li",
+      arrows: false,
+      dots: true,
+    },
+    photoalbum = { slidesToShow: 3, slidesToScroll: 3, rtl: true },
+    newsdiscusion = { slidesToShow: 2, slidesToScroll: 2, rtl: true },
+    video = { slidesToShow: 1, slidesToScroll: 1, rtl: true },
+    imageAlbumPager = {
+      slideWidth: 100,
+      minSlides: 1,
+      maxSlides: 5,
+      slideMargin: 16,
+      autoStart: false,
+      pager: false,
+      infiniteLoop: false,
+      nextSelector: ".imgAlbum-pager-with-controls .next-control",
+      prevSelector: ".imgAlbum-pager-with-controls .prev-control",
+      prevText: '<i class="fa fa-chevron-right"></i>',
+      nextText: '<i class="fa fa-chevron-left"></i>',
+    },
+    videoThumb = {
+      slideWidth: 123,
+      minSlides: 2,
+      maxSlides: 4,
+      slideMargin: 16,
+      autoStart: false,
+      pager: false,
+      infiniteLoop: false,
+      nextSelector: ".imgAlbum-pager-with-controls .next-control",
+      prevSelector: ".imgAlbum-pager-with-controls .prev-control",
+      prevText: '<i class="fa fa-angle-right"></i>',
+      nextText: '<i class="fa fa-angle-left"></i>',
+    };
+  /*if ($language == "ar-SA") { $('.slick').each(function() { $(this).slick({ infinite: false, slidesToShow: $(this).data("slides-to-show") || 3, slidesToScroll: $(this).data("slides-to-scroll") || 3, responsive: [{ breakpoint: 600, settings: { slidesToShow: 2, slidesToScroll: 2 } }, { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }], rtl: true, slide: '*' }); }); } else {
+        $('.slick').each(function() { $(this).slick({ infinite: false, slidesToShow: $(this).data("slides-to-show") || 3, slidesToScroll: $(this).data("slides-to-scroll") || 3, responsive: [{ breakpoint: 600, settings: { slidesToShow: 2, slidesToScroll: 2 } }, { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }], slide: '*' }); });
+        var video = { slidesToShow: 1, slidesToScroll: 1, rtl: false },
+            serviceSlider = { infinite: false, slidesToShow: 5, slidesToScroll: 5, rtl: false, slide: 'li', arrows: false, dots: true };
+        $('.media .panel-title').html('Media Library');
+        $('.media .nav').html('<li class="active"><a href="#photo-album" data-toggle="tab" role="tab">images</a></li>' + '<li class=""><a href="#video" data-toggle="tab" role="tab">videos</a></li>' + '<li class=""><a href="#news-discusion" data-toggle="tab" role="tab">news</a></li>' + '<li class=""><a href="#magazine" data-toggle="tab" role="tab">magazine</a></li>' + '<li class=""><a href="#press" data-toggle="tab" role="tab">press</a></li>');
+    } */
+  try {
+    //$('.vertical-slider ul').bxSlider(verticalSlider);
+    //$('.vertical-slider2 ul').bxSlider(verticalSlider2);
+    //$('.electronic-services ul').slick(serviceSlider);
+
+    //function ShowVideos() { $('#video .videos').slick(video); }
+    $(".panel-body .nav-pills")
+      .find("li")
+      .has('a[href="#video"]')
+      .click(function () {
+        setTimeout(ShowVideos, 100);
+      });
+    $("#events-page").on("click", ".btn", function (event) {
+      event.preventDefault();
+      var year = $("#events-page select").val();
+      window.location.href =
+        window.location.origin + window.location.pathname + "?year=" + year;
+    });
+  } catch (err) {}
+  try {
+    $(".ms-webpart-chrome .imageAlbum a.thumbImageAlbum").appendTo(
+      "#imageAlbum-pager"
+    );
+  } catch (err) {}
+  if ($("a.thumbImageAlbum").length == 1) {
+    $("a.thumbImageAlbum").hide();
+  }
+  if ($("a.thumbImageAlbum").length < 6) {
+    $(".imgAlbum-pager-with-controls .next-control").hide();
+    $(".imgAlbum-pager-with-controls .prev-control").hide();
+  } else {
+    console.log("images more than 6");
+  }
+  $(".month-events li.tab").each(function (index, el) {
+    var eventsItems = $(this).nextUntil("li.tab");
+    eventsItems.attr("class", index).addClass("clearfix");
+    $(this).children("a").attr("id", index);
+  });
+  $(".month-events li.tab")
+    .appendTo(".month-slider .nav-pills")
+    .end()
+    .first()
+    .addClass("active");
+  if ($("#events-page").length > 0) {
+    var items = $(".month-events .entries").children("li");
+    if ($language == "ar-SA") {
+      $("#events-page .panel-heading")
+        .find("label")
+        .text("السنة")
+        .end()
+        .find("button")
+        .text("بحث");
+    }
+  } else {
+    var items = $(".month-events .tab-content li");
+  }
+  items.hide();
+  items.filter(".0").show();
+  $(".month-events li.tab").on("click", "a", function (event) {
+    event.preventDefault();
+    var activeTab = $(this).attr("id");
+    if ($("#events-page").length > 0) {
+      var items = $(".month-events .entries").children("li");
+    } else {
+      var items = $(".month-events .tab-content li");
+    }
+    items.hide();
+    items.filter("." + activeTab).show();
+  });
+  try {
+    //$('.imageAlbum').bxSlider({ pagerCustom: '#imageAlbum-pager', controls: false, adaptiveHeight: true });
+    //$("#imageAlbum-pager").bxSlider(imageAlbumPager);
+    //$('#videosThumbs').bxSlider(videoThumb);
+    $("li.imagesAlbumGallery a:empty").parent().hide();
+  } catch (err) {}
+  /*if ($language == "ar-SA") {
+        $('.main-slider ul').slick({ slidesToShow: 1, slidesToScroll: 1, autoplay: true, autoplaySpeed: 6000, slide: 'li', rtl: true, lazyLoad: 'progressive', dots: true, appendDots: $('.PositionControl'), appendArrows: $('.PositionControl'), dotsClass: 'pager', customPaging: function(slider, i) { return '<a  data-role="none">' + (i + 1) + '</a>'; } });
+        $('.month-events .nav').slick({ infinite: false, slidesToShow: 1, slidesToScroll: 1, rtl: true, slide: 'li' });
+    } else {
+        $('.main-slider ul').slick({ slidesToShow: 1, slidesToScroll: 1, autoplay: true, autoplaySpeed: 6000, slide: 'li', lazyLoad: 'progressive', dots: true, appendDots: $('.PositionControl'), appendArrows: $('.PositionControl'), dotsClass: 'pager', customPaging: function(slider, i) { return '<a  data-role="none">' + (i + 1) + '</a>'; } });
+        $('.month-events .nav').slick({ infinite: false, slidesToShow: 1, slidesToScroll: 1, rtl: false, slide: 'li' });
+    }*/
+  $(".vertical-slider ul li").addClass("clearfix");
+  $(".ms-core-listMenu-root.static > li > a").each(function (index, el) {
+    switch (index) {
+      case 0:
+        $(this).prepend('<i class="fa fa-home"></i>');
+        break;
+      case 1:
+        $(this).prepend('<i class="fa fa-exclamation"></i>');
+        break;
+      case 2:
+        $(this).prepend('<i class="fa fa-map-marker"></i>');
+        break;
+      case 3:
+        $(this).prepend('<i class="fa fa-asterisk"></i>');
+        break;
+      case 4:
+        $(this).prepend('<i class="fa fa-bar-chart-o"></i>');
+        break;
+      case 5:
+        $(this).prepend('<i class="fa fa-book"></i>');
+        break;
+      case 6:
+        $(this).prepend('<i class="fa fa-asterisk"></i>');
+        break;
+      case 7:
+        $(this).prepend('<i class="fa fa-bullhorn"></i>');
+        break;
+      case 8:
+        $(this).prepend('<i class="fa fa-chain-broken"></i>');
+        break;
+      case 9:
+        $(this).prepend('<i class="fa fa-bullseye"></i>');
+        break;
+      case 10:
+        $(this).prepend('<i class="fa fa-info-circle"></i>');
+        break;
+      case 11:
+        $(this).prepend('<i class="fa fa-group"></i>');
+        break;
+      case 12:
+        $(this).prepend('<i class="fa fa-institution"></i>');
+        break;
+      case 13:
+        $(this).prepend('<i class="fa fa-child"></i>');
+        break;
+      case 14:
+        $(this).prepend('<i class="fa fa-database"></i>');
+        break;
+      case 15:
+        $(this).prepend('<i class="fa fa-file-text-o"></i>');
+        break;
+      default:
+        $(this).prepend('<i class="fa fa-home"></i>');
+        break;
+    }
+  });
+  $(document).mouseup(function (e) {
+    var container = $(".dropdown-menu"),
+      dropLink = $(".dropdown-toggle,.dropdown-toggle span");
+    if ($(".dropdown").hasClass("open")) {
+      if (
+        !container.is(e.target) &&
+        container.has(e.target).length === 0 &&
+        !dropLink.is(e.target)
+      ) {
+        console.log(e.target);
+        container.slideUp();
+      }
+    }
+  });
+  if (window.location.href.indexOf("year=") > -1) {
+    var urlYear = window.location.href,
+      year = urlYear.substring(urlYear.indexOf("year=") + 5);
+    $("#events-page select").val(year);
+  }
+  if ($(".event-title").length > 0) {
+    $(".page-header")
+      .first()
+      .find(".event-title")
+      .appendTo(".panel-heading h3")
+      .end()
+      .prev("span")
+      .remove()
+      .end()
+      .end()
+      .remove();
+  }
+  var accordion = function () {
+    $.easing.def = "easeOutBounce";
+    $("#accordion > ul > li").slideUp("fast");
+    $("#accordion .panel-heading")
+      .first()
+      .nextUntil(".panel-heading")
+      .slideDown();
+    var accordionLink = $("#accordion .panel-heading a");
+    accordionLink.addClass("collapsed here");
+    $("#accordion .panel-heading").first().find("a").removeClass("collapsed");
+    accordionLink.click(function (e) {
+      var dropDown = $(this).parent().parent().nextUntil(".panel-heading");
+      $("#accordion > ul > li").not(dropDown).slideUp("fast");
+      dropDown.slideToggle("fast");
+    });
+  };
+  if ($("#MSOSPWebPartManager_DisplayModeName").val() == "Browse") {
+    accordion();
+  }
+  $("ul.pagination").parent().appendTo(".newPagination");
+  var homeContainer = $(".main-slider").parents(".container");
+  homeContainer
+    .find(".breadcrumb")
+    .hide()
+    .end()
+    .find(".inner")
+    .removeClass("inner")
+    .find(".panel-inner")
+    .removeClass("panel");
+  if ($("#press-page").length > 0) {
+    var currentLoc = document.location.href,
+      queryLoc = currentLoc.indexOf("&"),
+      queryExist = currentLoc.indexOf("?"),
+      result = queryLoc - queryExist,
+      selectedType = currentLoc.substr(queryExist, result),
+      selectedJournal = currentLoc.substr(queryLoc + 7);
+    $("#myTab")
+      .find("li")
+      .has('a[href="' + selectedType + '"]')
+      .addClass("active");
+    $(".press-carousel")
+      .find("li")
+      .has('a[id="' + selectedJournal + '"]')
+      .addClass("active");
+  }
+
+  function gmod(n, m) {
+    return ((n % m) + m) % m;
+  }
+
+  function kuwaiticalendar(adjust) {
+    var today = new Date();
+    if (adjust) {
+      adjustmili = 1000 * 60 * 60 * 24 * adjust;
+      todaymili = today.getTime() + adjustmili;
+      today = new Date(todaymili);
+    }
+    day = today.getDate();
+    month = today.getMonth();
+    year = today.getFullYear();
+    m = month + 1;
+    y = year;
+    if (m < 3) {
+      y -= 1;
+      m += 12;
+    }
+    a = Math.floor(y / 100);
+    b = 2 - a + Math.floor(a / 4);
+    if (y < 1583) b = 0;
+    if (y == 1582) {
+      if (m > 10) b = -10;
+      if (m == 10) {
+        b = 0;
+        if (day > 4) b = -10;
+      }
+    }
+    jd =
+      Math.floor(365.25 * (y + 4716)) +
+      Math.floor(30.6001 * (m + 1)) +
+      day +
+      b -
+      1524;
+    b = 0;
+    if (jd > 2299160) {
+      a = Math.floor((jd - 1867216.25) / 36524.25);
+      b = 1 + a - Math.floor(a / 4);
+    }
+    bb = jd + b + 1524;
+    cc = Math.floor((bb - 122.1) / 365.25);
+    dd = Math.floor(365.25 * cc);
+    ee = Math.floor((bb - dd) / 30.6001);
+    day = bb - dd - Math.floor(30.6001 * ee);
+    month = ee - 1;
+    if (ee > 13) {
+      cc += 1;
+      month = ee - 13;
+    }
+    year = cc - 4716;
+    wd = gmod(jd + 1, 7) + 1;
+    iyear = 10631 / 30;
+    epochastro = 1948084;
+    epochcivil = 1948085;
+    shift1 = 8.01 / 60;
+    z = jd - epochastro;
+    cyc = Math.floor(z / 10631);
+    z = z - 10631 * cyc;
+    j = Math.floor((z - shift1) / iyear);
+    iy = 30 * cyc + j;
+    z = z - Math.floor(j * iyear + shift1);
+    im = Math.floor((z + 28.5001) / 29.5);
+    if (im == 13) im = 12;
+    id = z - Math.floor(29.5001 * im - 29);
+    var myRes = new Array(8);
+    myRes[0] = day;
+    myRes[1] = month - 1;
+    myRes[2] = year;
+    myRes[3] = jd - 1;
+    myRes[4] = wd - 1;
+    myRes[5] = id; // adjust days from here
+    myRes[6] = im - 1;
+    myRes[7] = iy;
+    return myRes;
+  }
+
+  function writeIslamicDate(adjustment) {
+    if ($language == "ar-SA") {
+      var wdNames = new Array(
+        "الاحد",
+        "الاثنين",
+        "الثلاثاء",
+        "الاربعاء",
+        "الخميس",
+        "الجمعه",
+        "السبت"
+      );
+      var iMonthNames = new Array(
+        "محرم",
+        "صفر",
+        "ربيع اول",
+        "ربيع آخر",
+        "جماد اول",
+        "جماد آخر",
+        "رجب",
+        "شعبان",
+        "رمضان",
+        "شوال",
+        "ذو القعده",
+        "ذو الحجه"
+      );
+    } else {
+      var wdNames = new Array(
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      );
+      var iMonthNames = new Array(
+        "Moharam",
+        "Safar",
+        "Rabia Awal",
+        "Rabia Akhar",
+        "Gamad Awal",
+        "Gamad Akhar",
+        "Ragab",
+        "Shaaban",
+        "Ramadan",
+        "Shawal",
+        "Zu al keada",
+        "Zu Al hegga"
+      );
+    }
+    var iDate = kuwaiticalendar(adjustment);
+    var outputIslamicDate =
+      wdNames[iDate[4]] +
+      " " +
+      iDate[5] +
+      " " +
+      iMonthNames[iDate[6]] +
+      " " +
+      iDate[7];
+    return outputIslamicDate;
+  }
+  var todayDate = new Date();
+  var hour = todayDate.getHours();
+  var min = todayDate.getMinutes();
+  if ($language == "ar-SA") {
+    if (hour > 11) {
+      format = "م";
+    } else {
+      format = "ص";
+    }
+  } else {
+    if (hour > 11) {
+      format = "PM";
+    } else {
+      format = "AM";
+    }
+  }
+  if (hour > 12) {
+    hour = hour - 12;
+  }
+  if (hour == 0) {
+    hour = 12;
+  }
+  if (min < 10) {
+    min = "0" + min;
+  }
+  var d = new Date();
+  var curr_date = d.getDate();
+  var curr_month = d.getMonth();
+  var curr_year = d.getFullYear();
+  if ($language == "ar-SA") {
+    var m_names = new Array(
+        "يناير",
+        "فبراير",
+        "مارس",
+        "ابريل",
+        "مايو",
+        "يونيو",
+        "يوليو",
+        "اغسطس",
+        "سبتمبر",
+        "اكتوبر",
+        "نوفمبر",
+        "ديسمبر"
+      ),
+      timeLocalRiydah = " بتوقيت الرياض ";
+  } else {
+    var m_names = new Array(
+        "Jun",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ),
+      time = " | ";
+  }
+  $(".currentDate").html(
+    writeIslamicDate() +
+      " - " +
+      (curr_date + " " + m_names[curr_month] + " " + curr_year)
+  );
+  $(".currentTime").html(
+    hour + "." + min + " " + format + " " + timeLocalRiydah
+  );
+  if ($(".randomAdvice").length) {
+    var advice = $(".randomAdvice"),
+      len = advice.length,
+      randomDiv,
+      randomDiv = Math.floor(Math.random() * len);
+    advice.removeClass("show");
+    advice.eq(randomDiv).addClass("show");
+  }
+  var subsitPos = $(".breadcrumb>span>span").length - 3,
+    subsiteTitle = $(".breadcrumb>span>span").eq(subsitPos).text();
+  $(".subsiteTitle").text(subsiteTitle);
+  $(".blankTarget a").attr("target", "_blank");
+  $(".datepicker-hijri").next("span").attr("style", "display:none");
+  /*$('.resultbtn').on('click', function(){
+    console.log("ee");
+     if($('.errorMsg').is(':visible')){ $('.errorMsg').parent().addClass('requiredTest');}
+    });*/
+
+  $(".digit-group")
+    .find("input")
+    .each(function () {
+      $(this).attr("maxlength", 1);
+      $(this).on("keyup", function (e) {
+        var parent = $($(this).parent());
+
+        if (e.keyCode === 8 || e.keyCode === 37) {
+          var prev = parent.find("input#" + $(this).data("previous"));
+
+          if (prev.length) {
+            $(prev).select();
+          }
+        } else if (
+          (e.keyCode >= 48 && e.keyCode <= 57) ||
+          (e.keyCode >= 65 && e.keyCode <= 90) ||
+          (e.keyCode >= 96 && e.keyCode <= 105) ||
+          e.keyCode === 39
+        ) {
+          var next = parent.find("input#" + $(this).data("next"));
+
+          if (next.length) {
+            $(next).select();
+          } else {
+            if (parent.data("autosubmit")) {
+              parent.submit();
+            }
+          }
+        }
+      });
+    });
+  $('[data-toggle="tooltip"]').tooltip();
+  //var timerOn = true;
+
+  //function timer(remaining) {
+  //    var m = Math.floor(remaining / 60);
+  //    var s = remaining % 60;
+
+  //    m = m < 10 ? '0' + m : m;
+  //    s = s < 10 ? '0' + s : s;
+  //    document.getElementById('OTP-timer').innerHTML = m + ':' + s;
+  //    remaining -= 1;
+
+  //    if (remaining >= 0 && timerOn) {
+  //        setTimeout(function () {
+  //            timer(remaining);
+  //        }, 1000);
+  //        return;
+  //    }
+
+  //    if (!timerOn) {
+  //        // Do validate stuff here
+  //        return;
+  //    }
+
+  //    // Do timeout stuff here
+  //    alert('Timeout for otp');
+  //}
+
+  //timer(60);
+  /******************************* start footer controls ***********************/
+   $('.zoom_in_link').on('click',  (e) => {
+           $('html').toggleClass('zoomIn')
+        });
+	var e = $util.getCookie("SelectedFontClass") || "";
+    $("body").addClass(e);
+    let t = $util.getCookie("prefered-colors") || "normal";
+    $("html").addClass(t),	
+	 $(".grayscale_icon").click(function() {
+        "normal" == t ? ($("html").addClass("grayscale"),
+        t = "grayscale",
+        $util.setCookie("prefered-colors", "grayscale", 365)) : "grayscale" == t ? ($("html").removeClass("grayscale"),
+        $("html").addClass("darkmode"),
+        t = "darkmode",
+        $util.setCookie("prefered-colors", "darkmode", 365)) : ($("html").removeClass("darkmode"),
+        $("html").addClass("normal"),
+        t = "normal",
+        $util.setCookie("prefered-colors", "normal", 365))
+    })
+/******************************* end footer controls ***********************/ 
+});
+/******************************* end ready jquery ***********************/
+
+function CheckAge(source, arguments) {
+  if (arguments == undefined) {
+    arguments.IsValid = true;
+    return;
+  }
+
+  var isOnAge = false;
+  var date1 = $(source).parent().find('[id$="txtStartDate"]').val();
+  var date2 = $("[id*= hdnCurrentDate]").val();
+
+  var date1D = new Date(date1);
+  var date2D = new Date(date2);
+
+  var diff = date2D - date1D.setFullYear(date1D.getFullYear() + parseInt(18));
+
+  if (diff >= 0) {
+    arguments.IsValid = true;
+  } else {
+    arguments.IsValid = false;
+  }
+}
+
+function checkDateNotAfterToday(source, arguments) {
+  var newDate1 = Date.parse(
+    $(source).parent().find('[id$="txtStartDate"]').val()
+  );
+  var newDate2 = Date.parse($("[id*= hdnCurrentDate]").val());
+  if (newDate1 > newDate2) {
+    arguments.IsValid = false;
+  } else {
+    arguments.IsValid = true;
+  }
+}
+function checkDateNotBeforeToday(source, arguments) {
+  var newDate1 = Date.parse(
+    $(source).parent().find('[id$="txtStartDate"]').val()
+  );
+  var newDate2 = Date.parse($("[id*= hdnCurrentDate]").val());
+  if (newDate1 < newDate2) {
+    arguments.IsValid = false;
+  } else {
+    arguments.IsValid = true;
+  }
+}
+//Sys.WebForms.PageRequestManager.getInstance().add_endRequest(endRequest);
+
+//function endRequest() {
+//    var calendar = $.calendars.instance('ummalqura', 'ar');
+//    $('.datepicker-hijri').calendarsPicker({ dateFormat: 'yyyy/mm/dd', calendar: calendar, nextText: "التالي", prevText: "السابق", todayText: "اليوم", closeText: "اغلاق", clearText: "مسح", yearRange: 'c-40:c+40' });
+//    var GridOne = $("div.GridOne").html();
+//    var GridTwo = $("div.GridTwo").html();
+//    $(".DiffGrid1").html(GridOne);
+//    $(".DiffGrid2").html(GridTwo);
+//    ChangeArrow();
+//}
+
+function pageLoad() {
+  $(".form-control").on("blur", function () {
+    $(this).val(
+      $(this)
+        .val()
+        .replace(/(<([^>]+)>)/gi, "")
+    );
+  });
+  $(".showMoreBtn").on("click", function () {
+    var allcomments = $(this)
+      .parent()
+      .children(" .comment-container.replies:hidden");
+    $(allcomments).slice(0, 3).show();
+    var allSelector = $(this).attr("targetDiv");
+    if (
+      $(
+        '.all-comments[allDiv="' + allSelector + '"] .comment-container.replies'
+      ).length == $(".all-comments .comment-container.replies:visible").length
+    ) {
+      $(".showMoreBtn").hide();
+    }
+  });
+  ChangeArrow();
+   $language = _spPageContextInfo.currentUICultureName;
+   
+  $(".portsSelect2").select2();
+  $(".select2").select2({
+ 
+    language: { noResults: () =>  $language == "ar-SA" ? "لاتوجد نتائج" : "No Results Found" },
+    placeholder: "اختر",
+  });
+  $(".GridCustom div").addClass("table-responsive");
+  $("#GridDiv div").addClass("table-responsive");
+  $(
+    "#ctl00_SPWebPartManager1_g_e14096a3_144b_4bf0_8cdf_0c0854a47bd7_ctl00_divAllSubLoyal div , #ctl00_SPWebPartManager1_g_e14096a3_144b_4bf0_8cdf_0c0854a47bd7_ctl00_divInfractionsSummary div"
+  ).addClass("table-responsive");
+  $(".DataPager").removeClass("table-responsive");
+
+  if (
+    $(
+      ".datepicker-hijri:not([LocalInitiation]), .datepicker-gregorian:not([LocalInitiation])"
+    ).length > 0
+  )
+    InitiateCalenders();
+
+  var GridOne = $("div.GridOne").html();
+  var GridTwo = $("div.GridTwo").html();
+  $(".DiffGrid1").html(GridOne);
+  $(".DiffGrid2").html(GridTwo);
+  if (($("[id$='divRegImpOnly']").children().length = 2)) {
+    $("[id$='divRegImpOnly']").find(".col-sm-1").addClass("col-sm-4");
+  }
+}
+
+function getIsQuizPage() {
+  context = new SP.ClientContext.get_current();
+  web = context.get_web();
+  listColl = web.get_lists();
+  list = listColl.getById(_spPageContextInfo.pageListId);
+  context.load(list);
+  context.executeQueryAsync(
+    Function.createDelegate(this, this.onQueryIsQuizzSucceeded),
+    Function.createDelegate(this, this.onQueryIsQuizzFailed)
+  );
+}
+function ClearAllControls() {
+  for (i = 0; i < document.forms[0].length; i++) {
+    doc = document.forms[0].elements[i];
+    //console.log('doc.type');
+    switch (doc.type) {
+      case "text":
+        doc.value = "";
+        break;
+      case "checkbox":
+        doc.checked = false;
+        break;
+      case "radio":
+        doc.checked = false;
+        break;
+
+      case "select-one":
+        doc.selectedIndex = 0;
+        break;
+      case "select-multiple":
+        doc.selectedIndex = 0;
+        break;
+      default:
+        break;
+    }
+  }
+
+  var curSelect2 = $(".groupingContent").find("select.select2");
+  //console.log(curSelect2.length);
+  for (var i = 0; i < curSelect2.length; i++) {
+    //console.log(curSelect2[i]);
+    $(curSelect2[i]).val(-1).trigger("change");
+    $(curSelect2[i]).closest(".errorMsg").hide();
+  }
+}
+
+function onQueryIsQuizzSucceeded() {
+  if (list.get_baseTemplate() == "102") {
+    jQuery("body").addClass("survey");
+  }
+}
+
+function onQueryIsQuizzFailed(sender, args) {
+  alert("Request failed. " + args.get_message() + "\n" + args.get_stackTrace());
+}
+jQuery;
+
+function InitiateCalenders() {
+  $language = _spPageContextInfo.currentUICultureName;
+  var calendar = $.calendars.instance(
+    "ummalqura",
+    $language == "ar-SA" ? "ar" : ""
+  );
+  $(".datepicker-hijri").calendarsPicker({
+    dateFormat: "yyyy/mm/dd",
+    calendar: calendar,
+    nextText: $language == "ar-SA" ? "التالي" : "Next",
+    prevText: $language == "ar-SA" ? "السابق" : "Previous",
+    todayText: $language == "ar-SA" ? "اليوم" : "Today",
+    closeText: $language == "ar-SA" ? "اغلاق" : "Close",
+    clearText: $language == "ar-SA" ? "مسح" : "Clear",
+    yearRange: "c-40:c+5",
+  });
+  var calendarGregorian = $.calendars.instance(
+    "gregorian",
+    $language == "ar-SA" ? "ar-EG" : "en-US"
+  );
+  $(".datepicker-gregorian").calendarsPicker({
+    dateFormat: "yyyy/mm/dd",
+    calendar: calendarGregorian,
+    nextText: $language == "ar-SA" ? "التالي" : "Next",
+    prevText: $language == "ar-SA" ? "السابق" : "Previous",
+    todayText: $language == "ar-SA" ? "اليوم" : "Today",
+    closeText: $language == "ar-SA" ? "اغلاق" : "Close",
+    clearText: $language == "ar-SA" ? "مسح" : "Clear",
+    yearRange: "c-40:c+40",
+  });
+}
+
+function ShowZatcaMessage(options) {
+  if ($("#ZatcaMessageModal").length > 0) $("#ZatcaMessageModal").remove();
+  $language = _spPageContextInfo.currentCultureName;
+  var _modalDiv = $("<div>", {
+    id: "ZatcaMessageModal",
+    tabindex: "-1",
+    class: "modal fade " + (options.modaldivcss ?? ""),
+    role: "dialog",
+    "aria-labelledby": "ZatcaMessageModalLabel",
+    "aria-hidden": "true",
+  });
+  var _dialogueDiv = $("<div>", {
+    role: "document",
+    class: "modal-dialog modal-lg " + (options.dialoguedivcss ?? ""),
+  });
+  var _contentDiv = $("<div>", {
+    class: "modal-content " + (options.contentdivcss ?? ""),
+  });
+  var _headerDiv = $("<div>", {
+    class: "modal-header " + (options.headerdivcss ?? ""),
+  });
+  var _closeBtn = $("<button>", {
+    type: "button",
+    class: "close " + (options.closebtncss ?? ""),
+    "data-dismiss": "modal",
+  });
+  $("<span>", { "aria-hidden": "true", class: options.closeiconcss ?? "" })
+    .html("&times;")
+    .appendTo(_closeBtn);
+  _closeBtn.appendTo(_headerDiv);
+  $("<h4>", { class: "modal-title fs-title " + (options.headercss ?? "") })
+    .text(options.header)
+    .appendTo(_headerDiv);
+  _contentDiv.append(_headerDiv);
+
+  var _bodyDiv = $("<div>", {
+    class: "modal-body " + (options.bodydivcss ?? ""),
+  });
+  var _msgRowDiv = $("<div>", {
+    class: "form-group " + (options.msgrowdivcss ?? ""),
+  });
+  var _msgDiv = $("<div>", {
+    class: "col-sm-12 alert text-center " + (options.msgdivcss ?? ""),
+  });
+  if (options.msgtype == "confirm" || options.msgtype == "notify")
+    _msgDiv.addClass("alert-info");
+  else _msgDiv.addClass("alert-danger");
+  var _msgLabel = $("<label></label>").text(options.message);
+  _msgRowDiv.append(_msgDiv.append(_msgLabel));
+  _bodyDiv.append(_msgRowDiv);
+  _contentDiv.append(_bodyDiv);
+
+  var _actionsClose = $("<button>", {
+    type: "button",
+    class:
+      "btn btn-danger hvr-bounce-to-top " + (options.actionsclosecss ?? ""),
+    "data-dismiss": "modal",
+  }).text(
+    options.actionclosetext ?? ($language == "ar-SA" ? "اغلاق" : "Close")
+  );
+  var _actionsReject = $("<button>", {
+    type: "button",
+    class:
+      "btn btn-danger hvr-bounce-to-top " + (options.actionsrejectcss ?? ""),
+    "data-dismiss": "modal",
+  }).text(options.actionclosetext ?? ($language == "ar-SA" ? "رفض" : "Reject"));
+  var _actionsConfirm = $("<button>", {
+    type: "button",
+    class:
+      "btn btn-primary hvr-bounce-to-top " + (options.actionsconfirmcss ?? ""),
+    "data-dismiss": "modal",
+  }).text(
+    options.actionconfirmtext ?? ($language == "ar-SA" ? "موافقة" : "Accept")
+  );
+  var _footerDiv = $("<div>", {
+    class: "modal-footer " + (options.footerdivcss ?? ""),
+  });
+
+  if (options.msgtype == "confirm") {
+    if (options.confirmcallback) _actionsConfirm.click(options.confirmcallback);
+    if (options.rejectcallback) _actionsReject.click(options.rejectcallback);
+    _footerDiv.append(_actionsConfirm).append(_actionsReject);
+  } else {
+    if (options.closecallback) _actionsClose.click(options.closecallback);
+    _footerDiv.append(_actionsClose);
+  }
+  _contentDiv.append(_footerDiv);
+  _dialogueDiv.append(_contentDiv);
+  _modalDiv.append(_dialogueDiv);
+  $("body").append(_modalDiv);
+  $("#ZatcaMessageModal").modal("show");
+  $("#ZatcaMessageModal").on("hidden.bs.modal", function () {
+    $("#ZatcaMessageModal").remove();
+    if (options.closecallback) options.closecallback();
+  });
+}
+
+//function LoadReCaptcha(failureCallback, lang, renderDivID) {
+//    $.getScript("https://www.google.com/recaptcha/api.js?render=explicit&hl=" + (lang ?? "ar"))
+//        .done(function (script, textStatus) {
+//            console.log(textStatus);
+//            if (!renderDivID) {
+//                $("body").append("<div id='divReCaptcha'></div>");
+//                renderDivID = 'divReCaptcha';
+//            }
+//            grecaptcha.ready(function () {
+//                window.ReCaptchaWidget = grecaptcha.render(renderDivID, {
+//                    sitekey: "6LdoSCoiAAAAAEBzFGlfOyFYBl5gbWDujI3hlVgL"
+//                });
+//            });
+//        })
+//        .fail(function (jqxhr, settings, exception) {
+//            failureCallback();
+//        });
+//}
+
+//function GetReCaptchaToken() {
+//    if (grecaptcha && window.ReCaptchaWidget != undefined)
+//        return grecaptcha.getResponse(window.ReCaptchaWidget);
+//    return '';
+//}
